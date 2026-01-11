@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fraud Result Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== GLOBAL ===== */
+* { box-sizing:border-box; margin:0; padding:0; font-family:'Roboto',sans-serif; }
+body { background:#f5f6fa; overflow-x:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    position:fixed;
+    top:0; left:0;
+    width:250px; height:100%;
+    background: linear-gradient(135deg,#0066ff,#3399ff);
+    color:#fff;
+    padding-top:40px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    box-shadow:5px 0 20px rgba(0,0,0,0.15);
+    border-top-right-radius:15px;
+    border-bottom-right-radius:15px;
+}
+.sidebar h2 {
+    text-align:center;
+    font-size:22px;
+    font-weight:700;
+    margin-bottom:25px;
+}
+.sidebar a {
+    color:#fff;
+    text-decoration:none;
+    padding:12px 20px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    border-radius:8px;
+    font-weight:500;
+    transition:0.3s;
+}
+.sidebar a:hover {
+    background: rgba(255,255,255,0.15);
+    transform:translateX(5px);
+}
+.sidebar a.active {
+    background: rgba(255,255,255,0.25);
+}
+.sidebar i { font-size:18px; }
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    margin-left:250px;
+    padding:40px;
+}
+h1 { font-size:28px; color:#222; margin-bottom:25px; }
+
+/* ===== CARD ===== */
+.card {
+    background:#fff;
+    padding:20px 25px;
+    border-radius:15px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+    max-width:750px;
+}
+.fraud-score {
+    font-size:26px;
+    font-weight:600;
+    margin-bottom:10px;
+    color:#0066ff;
+}
+.risk-level {
+    font-size:20px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:10px;
+    display:inline-block;
+    margin-bottom:10px;
+    color:#fff;
+}
+.risk-high { background: linear-gradient(90deg,#ff4d4f,#d9363e); }
+.risk-medium { background: linear-gradient(90deg,#ffa500,#ffcc00); }
+.risk-low { background: linear-gradient(90deg,#28a745,#2ecc71); }
+
+.decision {
+    font-size:18px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:10px;
+    background: linear-gradient(90deg,#6c63ff,#4b42d2);
+    color:#fff;
+    display:inline-block;
+}
+
+/* ===== EXPLANATION ===== */
+.explanation h3 { color:#0066ff; margin-bottom:10px; }
+.explanation ul { padding-left:20px; color:#555; }
+.explanation li { margin-bottom:6px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px){
+    .sidebar{width:70px;}
+    .sidebar h2{display:none;}
+    .sidebar a span{display:none;}
+    .main-content{margin-left:70px; padding:20px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== COMMON SIDEBAR ===== -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="dashboard.html"><i>📊</i> <span>Dashboard</span></a>
+    <a href="admin.html"><i>⚙️</i> <span>Settings</span></a>
+    <a href="role.html"><i>👥</i> <span>User Roles</span></a>
+    <a href="model_picker.html"><i>🧩</i> <span>Model Picker</span></a>
+    <a href="return_form.html"><i>📦</i> <span>Evaluate Return</span></a>
+    <a href="result.html" class="active"><i>📈</i> <span>Result</span></a>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content">
+    <h1>Fraud Analysis Result</h1>
+
+    <div class="card">
+        <p class="fraud-score">Fraud Score: <span id="fraudScore">0.00</span></p>
+        <p class="risk-level" id="riskLevel">RISK</p><br><br>
+        <p class="decision" id="decisionText">Decision: -</p>
+    </div>
+
+    <div class="card explanation">
+        <h3>Explanation</h3>
+        <ul id="explanationList">
+            <li>Loading data...</li>
+        </ul>
+    </div>
+</div>
+
+<!-- ===== DYNAMIC JS FETCH ===== -->
+<script>
+    // Read case_id from URL
+    const params = new URLSearchParams(window.location.search);
+    const caseId = params.get("case_id");
+
+    if (!caseId) {
+        document.getElementById("explanationList").innerHTML =
+            "<li>No case selected. Please submit a return for evaluation.</li>";
+        document.getElementById("decisionText").innerText = "Decision: -";
+        document.getElementById("riskLevel").innerText = "N/A";
+    } else {
+        // Simulated model response (replace with backend API later)
+        const result = {
+            fraudScore: Math.random() * 1, // 0.00 – 1.00
+            risk: "",
+            decision: "",
+            explanation: []
+        };
+
+        // Risk logic
+        if (result.fraudScore >= 0.7) {
+            result.risk = "HIGH";
+            result.decision = "Return Rejected";
+            result.explanation = [
+                "High return frequency",
+                "Short return window",
+                "Repeated return behavior",
+                "Product condition not sealed"
+            ];
+        } else if (result.fraudScore >= 0.4) {
+            result.risk = "MEDIUM";
+            result.decision = "Manual Review Required";
+            result.explanation = [
+                "Moderate return frequency",
+                "Return reason repeated",
+                "Price above average"
+            ];
+        } else {
+            result.risk = "LOW";
+            result.decision = "Return Approved";
+            result.explanation = [
+                "Normal user behavior",
+                "Low return frequency",
+                "Product returned in sealed condition"
+            ];
+        }
+
+        // Update UI
+        document.getElementById("fraudScore").innerText =
+            result.fraudScore.toFixed(2);
+
+        const riskElem = document.getElementById("riskLevel");
+        riskElem.innerText = result.risk + " RISK";
+        riskElem.className = "risk-level " +
+            (result.risk === "HIGH" ? "risk-high" :
+             result.risk === "MEDIUM" ? "risk-medium" : "risk-low");
+
+        document.getElementById("decisionText").innerText =
+            "Decision: " + result.decision;
+
+        const explanationUl = document.getElementById("explanationList");
+        explanationUl.innerHTML = "";
+        result.explanation.forEach(item => {
+            const li = document.createElement("li");
+            li.innerText = item;
+            explanationUl.appendChild(li);
+        });
+    }
+</script>
+
+
+</body>
+</html>

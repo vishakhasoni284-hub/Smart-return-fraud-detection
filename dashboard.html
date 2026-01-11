@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fraud Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===== GLOBAL ===== */
+* { box-sizing:border-box; margin:0; padding:0; font-family:'Roboto',sans-serif; }
+body { background:#f5f6fa; overflow-x:hidden; }
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    position:fixed;
+    top:0; left:0;
+    width:250px; height:100%;
+    background: linear-gradient(135deg,#0066ff,#3399ff);
+    color:#fff;
+    padding-top:40px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    box-shadow:5px 0 20px rgba(0,0,0,0.15);
+    border-top-right-radius:15px;
+    border-bottom-right-radius:15px;
+}
+.sidebar h2 { text-align:center; font-size:22px; font-weight:700; margin-bottom:25px; }
+.sidebar a { color:#fff; text-decoration:none; padding:12px 20px; display:flex; align-items:center; gap:12px; border-radius:8px; font-weight:500; transition:0.3s; }
+.sidebar a:hover { background: rgba(255,255,255,0.15); transform:translateX(5px); }
+.sidebar a.active { background: rgba(255,255,255,0.25); }
+.sidebar i { font-size:18px; }
+
+/* ===== MAIN CONTENT ===== */
+.main-content { margin-left:250px; padding:40px; }
+h1 { font-size:28px; color:#222; margin-bottom:25px; }
+
+/* ===== CARD ===== */
+.card {
+    background:#fff;
+    padding:20px 25px;
+    border-radius:15px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.1);
+    margin-bottom:20px;
+    max-width:750px;
+}
+.card h2 { font-size:22px; margin-bottom:10px; color:#0066ff; }
+.card p { font-size:18px; font-weight:600; }
+
+/* ===== GRID ===== */
+.grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width:768px){
+    .sidebar{width:70px;}
+    .sidebar h2{display:none;}
+    .sidebar a span{display:none;}
+    .main-content{margin-left:70px; padding:20px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="dashboard.html" class="active"><i>📊</i> <span>Dashboard</span></a>
+    <a href="admin.html"><i>⚙️</i> <span>Settings</span></a>
+    <a href="role.html"><i>👥</i> <span>User Roles</span></a>
+    <a href="model_picker.html"><i>🧩</i> <span>Model Picker</span></a>
+    <a href="return_form.html"><i>📦</i> <span>Evaluate Return</span></a>
+    <a href="result.html"><i>📈</i> <span>Result</span></a>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content">
+    <h1>Fraud Detection Dashboard</h1>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Total Returns Analyzed</h2>
+            <p id="totalReturns">0</p>
+        </div>
+
+        <div class="card">
+            <h2>High Risk Returns</h2>
+            <p id="highRisk">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Medium Risk Returns</h2>
+            <p id="mediumRisk">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Low Risk Returns</h2>
+            <p id="lowRisk">0</p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== DYNAMIC JS FETCH ===== -->
+<script>
+    // Fetch returns list from backend
+    fetch("/api/returns_list") // API should return an array of cases with "risk" field
+        .then(res => res.json())
+        .then(cases => {
+            const total = cases.length;
+            const high = cases.filter(c => c.risk === "HIGH").length;
+            const medium = cases.filter(c => c.risk === "MEDIUM").length;
+            const low = cases.filter(c => c.risk === "LOW").length;
+
+            document.getElementById("totalReturns").innerText = total;
+            document.getElementById("highRisk").innerText = high;
+            document.getElementById("mediumRisk").innerText = medium;
+            document.getElementById("lowRisk").innerText = low;
+        })
+        .catch(err => {
+            console.error("Error fetching returns list:", err);
+        });
+</script>
+
+</body>
+</html>

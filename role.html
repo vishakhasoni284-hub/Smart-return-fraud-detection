@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Role Management</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',sans-serif;}
+body{background:#f5f6fa;}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+    position:fixed;
+    top:0;left:0;
+    width:250px;height:100%;
+    background:linear-gradient(135deg,#0066ff,#3399ff);
+    color:#fff;
+    padding-top:40px;
+}
+.sidebar h2{text-align:center;margin-bottom:25px;}
+.sidebar a{
+    color:#fff;text-decoration:none;
+    padding:12px 20px;
+    display:flex;gap:10px;
+}
+.sidebar a.active,
+.sidebar a:hover{background:rgba(255,255,255,0.2);}
+
+/* ===== MAIN ===== */
+.main{margin-left:250px;padding:40px;}
+h1{margin-bottom:25px;}
+
+/* ===== CARD ===== */
+.card{
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.1);
+    max-width:900px;
+}
+
+/* Form */
+.form-row{
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
+}
+input,select{
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    width:100%;
+}
+button{
+    padding:10px 16px;
+    border:none;
+    border-radius:8px;
+    background:#0066ff;
+    color:#fff;
+    cursor:pointer;
+}
+button:hover{background:#0052cc;}
+
+/* Table */
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+th,td{
+    padding:12px;
+    border-bottom:1px solid #eee;
+    text-align:left;
+}
+th{background:#f1f3f6;}
+.status-active{color:#28a745;font-weight:600;}
+.status-inactive{color:#d9363e;font-weight:600;}
+
+.action-btn{
+    background:#ff4d4f;
+}
+.action-btn.activate{
+    background:#28a745;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="dashboard.html">📊 Dashboard</a>
+    <a href="admin.html">⚙️ Settings</a>
+    <a href="role.html" class="active">👥 User Roles</a>
+    <a href="model_picker.html">🧩 Model Picker</a>
+    <a href="return_form.html">📦 Evaluate Return</a>
+    <a href="result.html">📈 Result</a>
+</div>
+
+<div class="main">
+    <h1>User Role Management</h1>
+
+    <div class="card">
+        <!-- Add User -->
+        <div class="form-row">
+            <input type="text" placeholder="User ID (e.g. U1023)">
+            <select>
+                <option>Admin</option>
+                <option selected>Analyst</option>
+                <option>Support</option>
+            </select>
+            <button>Add User</button>
+        </div>
+
+        <!-- User Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>U1001</td>
+                    <td>Admin</td>
+                    <td class="status-active">Active</td>
+                    <td>
+                        <button class="action-btn">Deactivate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>U1023</td>
+                    <td>Analyst</td>
+                    <td class="status-active">Active</td>
+                    <td>
+                        <button class="action-btn">Deactivate</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>U1045</td>
+                    <td>Support</td>
+                    <td class="status-inactive">Inactive</td>
+                    <td>
+                        <button class="action-btn activate">Activate</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
