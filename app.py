@@ -28,7 +28,6 @@ def save_admin_settings():
     conn.commit()
     cursor.close()
     conn.close()
-
     return jsonify({"message": "Settings saved"}), 201
 
 
@@ -36,7 +35,6 @@ def save_admin_settings():
 @app.route("/api/evaluate-return", methods=["POST"])
 def evaluate_return():
     data = request.json
-
     result = predict_fraud(data)
 
     conn = get_db_connection()
@@ -45,10 +43,10 @@ def evaluate_return():
     cursor.execute("""
         INSERT INTO return_requests
         (user_id, account_age, total_orders, total_returns, product_price,
-         days_after_delivery, product_condition, high_value,
-         pickup_changed, repeated_reason, product_category,
-         fraud_score, risk_level, decision)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+         days_after_delivery, product_condition, product_category,
+         high_value, pickup_changed, repeated_reason,
+         fraud_score, risk_level, decision, explanation)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
     """, (
         data["user_id"],
         data["account_age"],
@@ -57,13 +55,14 @@ def evaluate_return():
         data["product_price"],
         data["days_after_delivery"],
         data["product_condition"],
+        data["product_category"],
         data["high_value"],
         data["pickup_changed"],
         data["repeated_reason"],
-        data["product_category"],
         result["fraud_score"],
         result["risk_level"],
-        result["decision"]
+        result["decision"],
+        ", ".join(result["explanation"])
     ))
 
     conn.commit()
@@ -79,5 +78,5 @@ def health():
     return "Backend running successfully 🚀"
 
 
-if __name__ == "_main_":
+if __name__ == "__main__":   # ✅ FIXED
     app.run(debug=True)
